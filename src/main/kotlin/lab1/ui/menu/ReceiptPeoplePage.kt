@@ -7,7 +7,7 @@ import java.lang.Integer.min
 private const val MAX_NAME_LENGTH = 50
 
 class ReceiptPeoplePage(private val createReceiptCommand: CreateReceiptCommand) :
-    OptionsMenuPage<ReceiptPeoplePage.Option>(Option.values().toList()) {
+    OptionsMenuPage<ReceiptPeoplePage.Option>(options = Option.values().toList()) {
 
     enum class Option(override val text: String) : MenuOption {
 

@@ -5,7 +5,10 @@ interface MenuOption {
     val text: String
 }
 
-abstract class OptionsMenuPage<Option : MenuOption>(private val options: List<Option>) : MenuPage() {
+abstract class OptionsMenuPage<Option : MenuOption>(
+    private val title: String? = null,
+    private val options: List<Option>
+) : MenuPage() {
 
     companion object {
 
@@ -13,10 +16,15 @@ abstract class OptionsMenuPage<Option : MenuOption>(private val options: List<Op
     }
 
     override fun show(): Action {
+        if (title != null) {
+            printToUser(title)
+        }
+
         val optionsMessage = buildString {
             options.forEachIndexed { index, option -> append("${index + 1}) ${option.text}\n") }
         }
         printToUser(optionsMessage)
+
         while (true) {
             printToUser("Выберите опцию (1-${options.size}): ", endLine = false)
             val userInput = getUserInput()

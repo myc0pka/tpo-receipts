@@ -8,7 +8,7 @@ import kotlin.math.min
 private const val ITEM_NAME_MAX_LENGTH = 20
 
 class ReceiptItemsPage(private val createReceiptCommand: CreateReceiptCommand) :
-    OptionsMenuPage<ReceiptItemsPage.Option>(Option.values().toList()) {
+    OptionsMenuPage<ReceiptItemsPage.Option>(options = Option.values().toList()) {
 
     enum class Option(override val text: String) : MenuOption {
 
