@@ -4,20 +4,20 @@ import lab1.command.CreateReceiptCommand
 import lab1.model.Person
 import java.lang.Integer.min
 
-enum class ReceiptPeopleOption(override val text: String) : MenuOption {
-
-    ADD_PERSON(text = "Добавить человека"),
-    END(text = "Перейти к следующему шагу")
-}
-
 private const val MAX_NAME_LENGTH = 50
 
 class ReceiptPeoplePage(private val createReceiptCommand: CreateReceiptCommand) :
-    OptionsMenuPage<ReceiptPeopleOption>(ReceiptPeopleOption.values().toList()) {
+    OptionsMenuPage<ReceiptPeoplePage.Option>(Option.values().toList()) {
 
-    override fun handleOptionInput(option: ReceiptPeopleOption): Action {
+    enum class Option(override val text: String) : MenuOption {
+
+        ADD_PERSON(text = "Добавить человека"),
+        END(text = "Перейти к следующему шагу")
+    }
+
+    override fun handleOptionInput(option: Option): Action {
         return when (option) {
-            ReceiptPeopleOption.ADD_PERSON -> {
+            Option.ADD_PERSON -> {
                 val personNameInput = requestNotEmptyInput(
                     message = "Введите имя человека: ",
                     emptyInputMessage = "Имя не должно быть пустым"
@@ -27,7 +27,7 @@ class ReceiptPeoplePage(private val createReceiptCommand: CreateReceiptCommand) 
 
                 Action.ShowPage(this)
             }
-            ReceiptPeopleOption.END -> {
+            Option.END -> {
                 if (createReceiptCommand.personCount == 0) {
                     printToUser("Добавьте по крайней мере одного человека")
                     Action.ShowPage(this)
