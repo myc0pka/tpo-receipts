@@ -18,7 +18,7 @@ class NewReceiptPage : MenuPage() {
                 } else {
                     command.name = userInput.substring(0, NAME_MAX_LENGTH)
                 }
-                return Action.Stub("Show next step page")
+                return Action.ShowPage(ReceiptPeoplePage(command))
             } else {
                 printToUser("Название не должно быть пустым")
             }
