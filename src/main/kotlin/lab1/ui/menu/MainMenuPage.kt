@@ -11,7 +11,7 @@ class MainMenuPage : OptionsMenuPage<MainMenuOption>(options = MainMenuOption.va
 
     override fun handleOptionInput(option: MainMenuOption): Action {
         return when (option) {
-            MainMenuOption.NEW_RECEIPT -> Action.Stub("Show new receipt page")
+            MainMenuOption.NEW_RECEIPT -> Action.ShowPage(NewReceiptPage())
             MainMenuOption.HISTORY -> Action.Stub("Show history page")
             MainMenuOption.EXIT -> Action.ExitProgram
         }
