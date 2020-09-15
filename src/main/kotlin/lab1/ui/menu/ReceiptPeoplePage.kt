@@ -32,7 +32,7 @@ class ReceiptPeoplePage(private val createReceiptCommand: CreateReceiptCommand) 
                     printToUser("Добавьте по крайней мере одного человека")
                     Action.ShowPage(this)
                 } else {
-                    Action.Stub("New step")
+                    Action.ShowPage(ReceiptItemsPage(createReceiptCommand))
                 }
             }
         }
