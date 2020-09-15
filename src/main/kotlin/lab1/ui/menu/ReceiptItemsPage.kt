@@ -55,7 +55,13 @@ class ReceiptItemsPage(private val createReceiptCommand: CreateReceiptCommand) :
                     amount, price
                 )
                 createReceiptCommand.addItem(item)
-                Action.ShowPage(this)
+                Action.ShowPage(
+                    ReceiptConsumptionPage(
+                        createReceiptCommand,
+                        consumedItem = item,
+                        availableAmount = item.amount
+                    )
+                )
             }
             Option.END -> {
                 if (createReceiptCommand.itemCount == 0) {
