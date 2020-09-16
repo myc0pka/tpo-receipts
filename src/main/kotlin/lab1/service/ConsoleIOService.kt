@@ -2,7 +2,7 @@ package lab1.service
 
 import java.util.*
 
-class ConsoleIOService {
+object ConsoleIOService {
 
     private val scanner = Scanner(System.`in`)
 
