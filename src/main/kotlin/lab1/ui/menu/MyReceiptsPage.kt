@@ -5,6 +5,7 @@ import lab1.db.ReceiptEntity
 class MyReceiptsPage(
     private val receiptEntities: List<ReceiptEntity>
 ) : OptionsMenuPage<MyReceiptsPage.Option>(
+    title = "-- Мои чеки --",
     options = receiptEntities.map { Option(it) }
 ) {
 
