@@ -30,15 +30,15 @@ class ReceiptPage(private val receiptEntity: ReceiptEntity) :
     }
 
     private fun print(): Action {
-        var totalSum = 0.0
         val items = transaction {
-            totalSum = receiptEntity.totalSum
             receiptEntity.items.map { ReceiptItem(it.name, it.amount, it.price) }
         }
-        items.forEach {
-            printToUser("'${it.name}' ${it.amount} шт. * ${it.price}")
+        printToUser("- Позиции в чеке '${receiptEntity.name}' -")
+        items.forEachIndexed { index, item ->
+            printToUser("${index + 1}. ${item.name} ${item.amount} шт. * ${item.price}")
         }
-        printToUser("ИТОГО: $totalSum")
+        printToUser("-")
+        printToUser("ИТОГО: ${receiptEntity.totalSum}")
 
         return Action.ShowPage(this)
     }
