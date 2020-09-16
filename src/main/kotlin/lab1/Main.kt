@@ -1,8 +1,16 @@
 package lab1
 
+import lab1.db.Consumptions
+import lab1.db.Persons
+import lab1.db.ReceiptItems
+import lab1.db.Receipts
 import lab1.ui.menu.Action
 import lab1.ui.menu.MainMenuPage
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.StdOutSqlLogger
+import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.transactions.transaction
 
 fun main(args: Array<String>) {
     check(args.size >= 2) { "DB username and password are not passed" }
@@ -14,6 +22,11 @@ fun main(args: Array<String>) {
         user = dbUser,
         password = dbPassword
     )
+
+    transaction {
+        addLogger(StdOutSqlLogger)
+        SchemaUtils.create(Receipts, Persons, ReceiptItems, Consumptions)
+    }
 
     var action: Action = Action.ShowPage(MainMenuPage())
     while (true) {

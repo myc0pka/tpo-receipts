@@ -9,9 +9,9 @@ import kotlin.random.Random
 
 private const val LOCAL_TOKEN_FILE_NAME = ".token"
 private const val TOKEN_SIZE = 30
-private const val ENCODED_TOKEN_SIZE = TOKEN_SIZE * 4 / 3
+const val ENCODED_TOKEN_SIZE = TOKEN_SIZE * 4 / 3
 
-class TokenService {
+object TokenService {
 
     private var localToken: String? = null
 

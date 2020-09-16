@@ -5,7 +5,7 @@ import lab1.command.CreateReceiptCommand
 import lab1.model.ReceiptItem
 import kotlin.math.min
 
-private const val ITEM_NAME_MAX_LENGTH = 20
+const val RECEIPT_ITEM_NAME_MAX_LENGTH = 20
 
 class ReceiptItemsPage(private val createReceiptCommand: CreateReceiptCommand) :
     OptionsMenuPage<ReceiptItemsPage.Option>(options = Option.values().toList()) {
@@ -51,7 +51,7 @@ class ReceiptItemsPage(private val createReceiptCommand: CreateReceiptCommand) :
                 }
 
                 val item = ReceiptItem(
-                    name = nameInput.substring(0, min(nameInput.length, ITEM_NAME_MAX_LENGTH)),
+                    name = nameInput.substring(0, min(nameInput.length, RECEIPT_ITEM_NAME_MAX_LENGTH)),
                     amount, price
                 )
                 createReceiptCommand.addItem(item)
@@ -68,7 +68,11 @@ class ReceiptItemsPage(private val createReceiptCommand: CreateReceiptCommand) :
                     printToUser("Добавьте по крайней мере один товар")
                     Action.ShowPage(this)
                 } else {
-                    Action.Stub("End creating receipt")
+                    printToUser("Создание чека...", endLine = false)
+                    if (createReceiptCommand.execute() == CreateReceiptCommand.Result.Ok) {
+                        printToUser("Готово")
+                    }
+                    Action.ShowPage(MainMenuPage())
                 }
             }
         }

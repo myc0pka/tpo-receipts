@@ -4,7 +4,7 @@ import lab1.command.CreateReceiptCommand
 import lab1.model.Person
 import java.lang.Integer.min
 
-private const val MAX_NAME_LENGTH = 50
+const val PERSON_NAME_MAX_LENGTH = 50
 
 class ReceiptPeoplePage(private val createReceiptCommand: CreateReceiptCommand) :
     OptionsMenuPage<ReceiptPeoplePage.Option>(options = Option.values().toList()) {
@@ -22,7 +22,7 @@ class ReceiptPeoplePage(private val createReceiptCommand: CreateReceiptCommand) 
                     message = "Введите имя человека: ",
                     emptyInputMessage = "Имя не должно быть пустым"
                 )
-                val person = Person(name = personNameInput.substring(0, min(personNameInput.length, MAX_NAME_LENGTH)))
+                val person = Person(name = personNameInput.substring(0, min(personNameInput.length, PERSON_NAME_MAX_LENGTH)))
                 createReceiptCommand.addPerson(person)
 
                 Action.ShowPage(this)
