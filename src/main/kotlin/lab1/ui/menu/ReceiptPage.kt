@@ -15,7 +15,7 @@ class ReceiptPage(private val receiptEntity: ReceiptEntity) :
         PRINT(text = "Распечатать"),
         SHOW_SUMS(text = "Показать суммы"),
         DELETE(text = "Удалить"),
-        MAIN_MENU(text = "В главное меню")
+        MAIN_MENU(text = "Вернуться в главное меню")
     }
 
     private class PersonWithSum(val personName: String, val sum: Double)
