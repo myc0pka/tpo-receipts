@@ -46,8 +46,6 @@ class CreateReceiptCommand(private val ownerToken: String) {
         val receiptTotalSum = items.fold(0.0) { acc, item -> acc + item.amount * item.price }
         return try {
             transaction {
-                addLogger(StdOutSqlLogger)
-
                 val receiptEntity = ReceiptEntity.new {
                     ownerToken = this@CreateReceiptCommand.ownerToken
                     name = this@CreateReceiptCommand.name!!
