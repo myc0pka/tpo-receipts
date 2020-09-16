@@ -19,4 +19,14 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
 
     implementation("org.postgresql:postgresql:42.2.5")
+
+    val junitVersion = "5.7.0"
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
+}
+
+tasks {
+    test {
+        useJUnitPlatform()
+    }
 }
