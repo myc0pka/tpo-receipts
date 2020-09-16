@@ -5,19 +5,19 @@ import lab1.db.Receipts
 import lab1.service.TokenService
 import org.jetbrains.exposed.sql.transactions.transaction
 
-enum class MainMenuOption(override val text: String) : MenuOption {
+class MainMenuPage : OptionsMenuPage<MainMenuPage.Option>(options = Option.values().toList()) {
 
-    NEW_RECEIPT(text = "Новый чек"),
-    HISTORY(text = "Мои чеки"),
-    EXIT(text = "Выйти")
-}
+    enum class Option(override val text: String) : MenuOption {
 
-class MainMenuPage : OptionsMenuPage<MainMenuOption>(options = MainMenuOption.values().toList()) {
+        NEW_RECEIPT(text = "Новый чек"),
+        HISTORY(text = "Мои чеки"),
+        EXIT(text = "Выйти")
+    }
 
-    override fun handleOptionInput(option: MainMenuOption): Action {
+    override fun handleOptionInput(option: Option): Action {
         return when (option) {
-            MainMenuOption.NEW_RECEIPT -> Action.ShowPage(NewReceiptPage())
-            MainMenuOption.HISTORY -> {
+            Option.NEW_RECEIPT -> Action.ShowPage(NewReceiptPage())
+            Option.HISTORY -> {
                 val receiptEntities = transaction {
                     ReceiptEntity.find { Receipts.ownerToken eq TokenService.getLocalToken() }.toList()
                 }
@@ -28,7 +28,7 @@ class MainMenuPage : OptionsMenuPage<MainMenuOption>(options = MainMenuOption.va
                     Action.ShowPage(MainMenuPage())
                 }
             }
-            MainMenuOption.EXIT -> Action.ExitProgram
+            Option.EXIT -> Action.ExitProgram
         }
     }
 }
