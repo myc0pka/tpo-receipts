@@ -12,6 +12,7 @@ class ReceiptEntity(id: EntityID<Int>) : IntEntity(id) {
     var name by Receipts.name
     var totalSum by Receipts.totalSum
     val persons by PersonEntity referrersOn Persons.receipt
+    val items by ReceiptItemEntity referrersOn ReceiptItems.receipt
 }
 
 class PersonEntity(id: EntityID<Int>) : IntEntity(id) {
