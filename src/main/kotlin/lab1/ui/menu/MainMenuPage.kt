@@ -5,7 +5,10 @@ import lab1.db.Receipts
 import lab1.service.TokenService
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class MainMenuPage : OptionsMenuPage<MainMenuPage.Option>(options = Option.values().toList()) {
+class MainMenuPage : OptionsMenuPage<MainMenuPage.Option>(
+    title = "-- Главное меню -- ",
+    options = Option.values().toList()
+) {
 
     enum class Option(override val text: String) : MenuOption {
 
