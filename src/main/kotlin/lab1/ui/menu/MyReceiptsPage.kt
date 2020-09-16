@@ -15,6 +15,6 @@ class MyReceiptsPage(
     }
 
     override fun handleOptionInput(option: Option): Action {
-        return Action.Stub("Show receipt page")
+        return Action.ShowPage(ReceiptPage(option.receiptEntity))
     }
 }
