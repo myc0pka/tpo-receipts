@@ -20,10 +20,7 @@ abstract class OptionsMenuPage<Option : MenuOption>(
             printToUser(title)
         }
 
-        val optionsMessage = buildString {
-            options.forEachIndexed { index, option -> append("${index + 1}) ${option.text}\n") }
-        }
-        printToUser(optionsMessage)
+        options.forEachIndexed { index, option -> printToUser("${index + 1}) ${option.text}") }
 
         while (true) {
             printToUser("Выберите опцию (1-${options.size}): ", endLine = false)
