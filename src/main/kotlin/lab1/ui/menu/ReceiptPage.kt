@@ -44,18 +44,19 @@ class ReceiptPage(private val receiptEntity: ReceiptEntity) :
     }
 
     private fun showSums(): Action {
-        var totalSum = 0.0
         var totalConsumedSum = 0.0
         val personWithSumList = transaction {
-            totalSum = receiptEntity.totalSum
             receiptEntity.persons.map { person ->
                 val consumedSum = person.consumptions.fold(0.0) { acc, c -> acc + c.amount * c.item.price }
                 totalConsumedSum += consumedSum
                 PersonWithSum(person.name, consumedSum)
             }
         }
+        printToUser("- Суммы чека '${receiptEntity.name}' -")
         personWithSumList.forEach { printToUser("${it.personName} должен вам ${it.sum}") }
+        val totalSum = receiptEntity.totalSum
         printToUser("С вас: ${totalSum - totalConsumedSum}")
+        printToUser("-")
         printToUser("ИТОГО: $totalSum")
 
         return Action.ShowPage(this)
