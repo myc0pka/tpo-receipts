@@ -3,8 +3,19 @@ package lab1
 import lab1.service.ConsoleIOService
 import lab1.ui.menu.Action
 import lab1.ui.menu.MainMenuPage
+import org.jetbrains.exposed.sql.Database
 
-fun main() {
+fun main(args: Array<String>) {
+    check(args.size >= 2) { "DB username and password are not passed" }
+    val dbUser = args[0]
+    val dbPassword = args[1]
+    Database.connect(
+        url = "jdbc:postgresql://balarama.db.elephantsql.com:5432/$dbUser",
+        driver = "org.postgresql.Driver",
+        user = dbUser,
+        password = dbPassword
+    )
+
     ServiceLocator.register(ConsoleIOService(), ConsoleIOService::class)
 
     var action: Action = Action.ShowPage(MainMenuPage())
