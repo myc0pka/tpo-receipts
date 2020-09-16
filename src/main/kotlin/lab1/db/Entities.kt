@@ -10,6 +10,7 @@ class ReceiptEntity(id: EntityID<Int>) : IntEntity(id) {
 
     var ownerToken by Receipts.ownerToken
     var name by Receipts.name
+    var totalSum by Receipts.totalSum
 }
 
 class PersonEntity(id: EntityID<Int>) : IntEntity(id) {

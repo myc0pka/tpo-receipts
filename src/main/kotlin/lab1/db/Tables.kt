@@ -11,6 +11,7 @@ object Receipts : IntIdTable() {
 
     val ownerToken = varchar("owner_token", length = ENCODED_TOKEN_SIZE + 1)
     val name = varchar("name", length = RECEIPT_NAME_MAX_LENGTH + 1)
+    val totalSum = double("total_sum")
 }
 
 object Persons : IntIdTable() {
