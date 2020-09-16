@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class ReceiptPage(private val receiptEntity: ReceiptEntity) :
     OptionsMenuPage<ReceiptPage.Option>(
         options = Option.values().toList(),
-        title = "Чек '${receiptEntity.name}'. Действия:"
+        title = "-- Чек '${receiptEntity.name}' --"
     ) {
 
     enum class Option(override val text: String) : MenuOption {
