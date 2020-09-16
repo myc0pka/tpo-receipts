@@ -1,9 +1,9 @@
 package lab1.db
 
 import lab1.service.ENCODED_TOKEN_SIZE
-import lab1.ui.menu.PERSON_NAME_MAX_LENGTH
-import lab1.ui.menu.RECEIPT_ITEM_NAME_MAX_LENGTH
-import lab1.ui.menu.RECEIPT_NAME_MAX_LENGTH
+import lab1.menu.PERSON_NAME_MAX_LENGTH
+import lab1.menu.RECEIPT_ITEM_NAME_MAX_LENGTH
+import lab1.menu.RECEIPT_NAME_MAX_LENGTH
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.ReferenceOption
 

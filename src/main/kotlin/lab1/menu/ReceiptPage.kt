@@ -1,4 +1,4 @@
-package lab1.ui.menu
+package lab1.menu
 
 import lab1.db.ReceiptEntity
 import lab1.model.ReceiptItem

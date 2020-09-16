@@ -1,4 +1,4 @@
-package lab1.ui.menu
+package lab1.menu
 
 sealed class Action {
 

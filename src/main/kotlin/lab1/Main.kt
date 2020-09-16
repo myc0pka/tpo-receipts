@@ -4,8 +4,8 @@ import lab1.db.Consumptions
 import lab1.db.Persons
 import lab1.db.ReceiptItems
 import lab1.db.Receipts
-import lab1.ui.menu.Action
-import lab1.ui.menu.MainMenuPage
+import lab1.menu.Action
+import lab1.menu.MainMenuPage
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.StdOutSqlLogger
