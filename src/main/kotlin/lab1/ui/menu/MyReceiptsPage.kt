@@ -6,16 +6,19 @@ class MyReceiptsPage(
     private val receiptEntities: List<ReceiptEntity>
 ) : OptionsMenuPage<MyReceiptsPage.Option>(
     title = "-- Мои чеки --",
-    options = receiptEntities.map { Option(it) }
+    options = receiptEntities.map { Option.Item(it) } + Option.MainMenu
 ) {
 
-    class Option(val receiptEntity: ReceiptEntity) : MenuOption {
+    sealed class Option(override val text: String) : MenuOption {
 
-        override val text: String
-            get() = receiptEntity.name
+        class Item(val receiptEntity: ReceiptEntity) : Option(text = receiptEntity.name)
+        object MainMenu : Option(text = "Вернуться в главное меню")
     }
 
     override fun handleOptionInput(option: Option): Action {
-        return Action.ShowPage(ReceiptPage(option.receiptEntity))
+        return when (option) {
+            is Option.Item -> Action.ShowPage(ReceiptPage(option.receiptEntity))
+            Option.MainMenu -> Action.ShowPage(MainMenuPage())
+        }
     }
 }
