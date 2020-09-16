@@ -11,6 +11,7 @@ class ReceiptEntity(id: EntityID<Int>) : IntEntity(id) {
     var ownerToken by Receipts.ownerToken
     var name by Receipts.name
     var totalSum by Receipts.totalSum
+    val persons by PersonEntity referrersOn Persons.receipt
 }
 
 class PersonEntity(id: EntityID<Int>) : IntEntity(id) {
@@ -19,6 +20,7 @@ class PersonEntity(id: EntityID<Int>) : IntEntity(id) {
 
     var receipt by ReceiptEntity referencedOn Persons.receipt
     var name by Persons.name
+    val consumptions by ConsumptionEntity referrersOn Consumptions.person
 }
 
 class ReceiptItemEntity(id: EntityID<Int>) : IntEntity(id) {
