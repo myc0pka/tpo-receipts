@@ -4,9 +4,7 @@ import lab1.db.Consumptions
 import lab1.db.Persons
 import lab1.db.ReceiptItems
 import lab1.db.Receipts
-import lab1.model.Receipt
-import lab1.model.ReceiptItem
-import lab1.model.ReceiptName
+import lab1.model.*
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
@@ -58,5 +56,22 @@ object ReceiptRepository {
     fun getReceiptItemsByReceiptId(receiptId: Int): List<ReceiptItem> {
         val queryResult = ReceiptItems.select { ReceiptItems.receipt eq EntityID(receiptId, Receipts) }
         return queryResult.map { ReceiptItem(it[ReceiptItems.name], it[ReceiptItems.amount], it[ReceiptItems.price]) }
+    }
+
+    fun getPersonTotalConsumptions(receiptId: Int): List<PersonTotalConsumption> {
+        val receiptEntityId = EntityID(receiptId, Receipts)
+        val queryResult =
+            (Consumptions innerJoin Persons innerJoin ReceiptItems)
+                .slice(Persons.name, ReceiptItems.amount, ReceiptItems.price)
+                .select { Consumptions.receipt eq receiptEntityId }
+                .groupBy { it[Persons.name] }
+        return queryResult.map { (personName, resultRowList) ->
+            PersonTotalConsumption(
+                personName,
+                totalConsumption = resultRowList.fold(0.0) { acc, resultRow ->
+                    acc + resultRow[ReceiptItems.price] * resultRow[ReceiptItems.amount]
+                }
+            )
+        }
     }
 }
