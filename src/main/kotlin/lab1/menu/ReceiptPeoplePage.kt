@@ -25,12 +25,19 @@ class ReceiptPeoplePage(private val createReceiptCommand: CreateReceiptCommand) 
     }
 
     private fun addPerson(): Action {
-        val personNameInput = requestNotEmptyInput(
-            message = "Введите имя человека: ",
-            emptyInputMessage = "Имя не должно быть пустым"
-        )
-        val person = Person(name = personNameInput.substring(0, min(personNameInput.length, PERSON_NAME_MAX_LENGTH)))
-        createReceiptCommand.addPerson(person)
+        while (true) {
+            val personNameInput = requestNotEmptyInput(
+                message = "Введите имя человека: ",
+                emptyInputMessage = "Имя не должно быть пустым"
+            )
+            val personName = personNameInput.substring(0, min(personNameInput.length, PERSON_NAME_MAX_LENGTH))
+            if (!createReceiptCommand.hasPersonWithName(personName)) {
+                createReceiptCommand.addPerson(Person(personName))
+                break
+            } else {
+                printToUser("Ошибка: человек с именем '$personName' был добавлен ранее")
+            }
+        }
 
         return Action.ShowPage(this)
     }
