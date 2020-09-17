@@ -1,9 +1,7 @@
 package lab1.menu
 
-import lab1.db.ReceiptEntity
-import lab1.db.Receipts
+import lab1.service.ReceiptRepository
 import lab1.service.TokenService
-import org.jetbrains.exposed.sql.transactions.transaction
 
 class MainMenuPage : OptionsMenuPage<MainMenuPage.Option>(
     title = "-- Главное меню -- ",
@@ -21,11 +19,9 @@ class MainMenuPage : OptionsMenuPage<MainMenuPage.Option>(
         return when (option) {
             Option.NEW_RECEIPT -> Action.ShowPage(NewReceiptPage())
             Option.HISTORY -> {
-                val receiptEntities = transaction {
-                    ReceiptEntity.find { Receipts.ownerToken eq TokenService.getLocalToken() }.toList()
-                }
-                if (receiptEntities.isNotEmpty()) {
-                    Action.ShowPage(MyReceiptsPage(receiptEntities))
+                val namedReceipts = ReceiptRepository.getReceiptNamesByToken(TokenService.getLocalToken())
+                if (namedReceipts.isNotEmpty()) {
+                    Action.ShowPage(MyReceiptsPage(namedReceipts))
                 } else {
                     printToUser("Пока что нет ни одного чека")
                     Action.ShowPage(MainMenuPage())

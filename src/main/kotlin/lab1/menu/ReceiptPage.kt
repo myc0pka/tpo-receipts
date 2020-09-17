@@ -1,13 +1,12 @@
 package lab1.menu
 
-import lab1.db.ReceiptEntity
-import lab1.model.ReceiptItem
-import org.jetbrains.exposed.sql.transactions.transaction
+import lab1.model.ReceiptName
+import lab1.service.ReceiptRepository
 
-class ReceiptPage(private val receiptEntity: ReceiptEntity) :
+class ReceiptPage(private val namedReceipt: ReceiptName) :
     OptionsMenuPage<ReceiptPage.Option>(
         options = Option.values().toList(),
-        title = "-- Чек '${receiptEntity.name}' --"
+        title = "-- Чек '${namedReceipt.name}' --"
     ) {
 
     enum class Option(override val text: String) : MenuOption {
@@ -17,8 +16,6 @@ class ReceiptPage(private val receiptEntity: ReceiptEntity) :
         DELETE(text = "Удалить"),
         MAIN_MENU(text = "Вернуться в главное меню")
     }
-
-    private class PersonWithSum(val personName: String, val sum: Double)
 
     override fun handleOptionInput(option: Option): Action {
         return when (option) {
@@ -30,31 +27,24 @@ class ReceiptPage(private val receiptEntity: ReceiptEntity) :
     }
 
     private fun print(): Action {
-        val items = transaction {
-            receiptEntity.items.map { ReceiptItem(it.name, it.amount, it.price) }
-        }
-        printToUser("- Позиции в чеке '${receiptEntity.name}' -")
+        val items = ReceiptRepository.getReceiptItems(namedReceipt.id)
+        val totalSum = ReceiptRepository.getReceiptTotalSum(namedReceipt.id)
+        printToUser("- Позиции в чеке '${namedReceipt.name}' -")
         items.forEachIndexed { index, item ->
             printToUser("${index + 1}. ${item.name} ${item.amount} шт. * ${item.price}")
         }
         printToUser("-")
-        printToUser("ИТОГО: ${receiptEntity.totalSum}")
+        printToUser("ИТОГО: $totalSum")
 
         return Action.ShowPage(this)
     }
 
     private fun showSums(): Action {
-        var totalConsumedSum = 0.0
-        val personWithSumList = transaction {
-            receiptEntity.persons.map { person ->
-                val consumedSum = person.consumptions.fold(0.0) { acc, c -> acc + c.amount * c.item.price }
-                totalConsumedSum += consumedSum
-                PersonWithSum(person.name, consumedSum)
-            }
-        }
-        printToUser("- Суммы чека '${receiptEntity.name}' -")
-        personWithSumList.forEach { printToUser("${it.personName} должен вам ${it.sum}") }
-        val totalSum = receiptEntity.totalSum
+        val personTotalConsumptions = ReceiptRepository.getPersonTotalConsumptions(namedReceipt.id)
+        val totalSum = ReceiptRepository.getReceiptTotalSum(namedReceipt.id)
+        val totalConsumedSum = personTotalConsumptions.fold(0.0) { acc, c -> acc + c.totalConsumption }
+        printToUser("- Суммы чека '${namedReceipt.name}' -")
+        personTotalConsumptions.forEach { printToUser("${it.personName} должен вам ${it.totalConsumption}") }
         printToUser("С вас: ${totalSum - totalConsumedSum}")
         printToUser("-")
         printToUser("ИТОГО: $totalSum")
@@ -63,6 +53,6 @@ class ReceiptPage(private val receiptEntity: ReceiptEntity) :
     }
 
     private fun delete(): Action {
-        return Action.ShowPage(DeletionConfirmationMenuPage(receiptEntity, callingPage = this))
+        return Action.ShowPage(DeletionConfirmationMenuPage(namedReceipt, callingPage = this))
     }
 }
