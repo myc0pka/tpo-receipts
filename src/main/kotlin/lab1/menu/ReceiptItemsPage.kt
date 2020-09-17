@@ -13,7 +13,7 @@ class ReceiptItemsPage(private val createReceiptCommand: CreateReceiptCommand) :
     enum class Option(override val text: String) : MenuOption {
 
         ADD_ITEM(text = "Добавить товар"),
-        END(text = "Завершить"),
+        END(text = "Завершить создание чека"),
         CANCEL(text = "Вернуться в главное меню")
     }
 
