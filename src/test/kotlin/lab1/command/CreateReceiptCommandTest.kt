@@ -9,6 +9,7 @@ import lab1.model.Receipt
 import lab1.model.ReceiptItem
 import lab1.service.ReceiptRepository
 import lab1.service.TokenService
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
@@ -31,6 +32,8 @@ class CreateReceiptCommandTest {
         private val CONSUMPTION2 = Consumption(ITEM2, PERSON2, 2)
     }
 
+    private val command = CreateReceiptCommand(LOCAL_TOKEN)
+
     @Test
     @DisplayName("execute() should call ReceiptRepository#saveReceipt()")
     fun execute() {
@@ -39,7 +42,7 @@ class CreateReceiptCommandTest {
         mockkObject(ReceiptRepository)
         every { ReceiptRepository.saveReceipt(any(), any()) } returns Unit
 
-        CreateReceiptCommand(LOCAL_TOKEN).apply {
+        command.apply {
             name = RECEIPT_NAME
             addPerson(PERSON1)
             addPerson(PERSON2)
@@ -47,7 +50,9 @@ class CreateReceiptCommandTest {
             addItem(ITEM2)
             addConsumption(CONSUMPTION1)
             addConsumption(CONSUMPTION2)
-        }.execute()
+
+            execute()
+        }
         verify {
             ReceiptRepository.saveReceipt(
                 Receipt(
@@ -60,5 +65,19 @@ class CreateReceiptCommandTest {
                 LOCAL_TOKEN
             )
         }
+    }
+
+    @Test
+    @DisplayName("When there are no people with given name hasPersonWithName() should return false")
+    fun hasPersonWithName_NoPeopleWithSuchName() {
+        command.addPerson(Person("Name1"))
+        Assertions.assertFalse(command.hasPersonWithName("Name2"))
+    }
+
+    @Test
+    @DisplayName("When there is a person who has given name hasPersonWithName() should return true")
+    fun hasPersonWithName_OnePersonHasSuchName() {
+        command.addPerson(Person("Name"))
+        Assertions.assertTrue(command.hasPersonWithName("Name"))
     }
 }
