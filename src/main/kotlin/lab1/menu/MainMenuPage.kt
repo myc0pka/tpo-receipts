@@ -31,7 +31,7 @@ class MainMenuPage : OptionsMenuPage<MainMenuPage.Option>(
                     Action.ShowPage(MainMenuPage())
                 }
             }
-            Option.EXIT -> Action.ExitProgram
+            Option.EXIT -> Action.ShowPage(ExitConfirmationMenuPage())
         }
     }
 }
