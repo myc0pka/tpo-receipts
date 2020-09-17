@@ -6,6 +6,7 @@ import lab1.db.ReceiptItems
 import lab1.db.Receipts
 import lab1.model.*
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -86,6 +87,12 @@ object ReceiptRepository {
         val queryResult = ReceiptItems.select { ReceiptItems.receipt eq receiptId.receiptEntityId }
         return queryResult.map {
             ReceiptItem(it[ReceiptItems.name], it[ReceiptItems.amount], it[ReceiptItems.price])
+        }
+    }
+
+    fun deleteReceipt(receiptId: Int) {
+        transaction {
+            Receipts.deleteWhere { Receipts.id eq receiptId.receiptEntityId }
         }
     }
 }
