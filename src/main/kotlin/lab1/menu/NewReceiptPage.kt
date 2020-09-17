@@ -6,9 +6,9 @@ import kotlin.math.min
 
 const val RECEIPT_NAME_MAX_LENGTH = 20
 
-class NewReceiptPage : MenuPage() {
-
-    private val command = CreateReceiptCommand(ownerToken = TokenService.getLocalToken())
+class NewReceiptPage(
+    private val command: CreateReceiptCommand = CreateReceiptCommand(ownerToken = TokenService.getLocalToken())
+) : MenuPage() {
 
     override fun show(): Action {
         val nameInput = requestNotEmptyInput(
