@@ -5,8 +5,10 @@ import lab1.db.Persons
 import lab1.db.ReceiptItems
 import lab1.db.Receipts
 import lab1.model.Receipt
+import lab1.model.ReceiptName
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object ReceiptRepository {
@@ -44,5 +46,10 @@ object ReceiptRepository {
                 }
             }
         }
+    }
+
+    fun getReceiptNamesByToken(ownerToken: String): List<ReceiptName> {
+        val queryResult = Receipts.slice(Receipts.id, Receipts.name).select { Receipts.ownerToken eq ownerToken }
+        return queryResult.map { ReceiptName(it[Receipts.name], it[Receipts.id].value) }
     }
 }
