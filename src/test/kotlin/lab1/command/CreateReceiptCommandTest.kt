@@ -1,0 +1,64 @@
+package lab1.command
+
+import io.mockk.every
+import io.mockk.mockkObject
+import io.mockk.verify
+import lab1.model.Consumption
+import lab1.model.Person
+import lab1.model.Receipt
+import lab1.model.ReceiptItem
+import lab1.service.ReceiptRepository
+import lab1.service.TokenService
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+
+private const val LOCAL_TOKEN = "fash2refisdl"
+
+class CreateReceiptCommandTest {
+
+    companion object {
+
+        private const val RECEIPT_NAME = "Name"
+
+        private val PERSON1 = Person("Person1")
+        private val PERSON2 = Person("Person2")
+
+        private val ITEM1 = ReceiptItem("Item1", 2, 100.0)
+        private val ITEM2 = ReceiptItem("Item2", 3, 200.0)
+        private const val TOTAL_SUM = 2 * 100.0 + 3 * 200.0
+
+        private val CONSUMPTION1 = Consumption(ITEM1, PERSON1, 1)
+        private val CONSUMPTION2 = Consumption(ITEM2, PERSON2, 2)
+    }
+
+    @Test
+    @DisplayName("execute() should call ReceiptRepository#saveReceipt()")
+    fun execute() {
+        mockkObject(TokenService)
+        every { TokenService.getLocalToken() } returns LOCAL_TOKEN
+        mockkObject(ReceiptRepository)
+        every { ReceiptRepository.saveReceipt(any(), any()) } returns Unit
+
+        CreateReceiptCommand(LOCAL_TOKEN).apply {
+            name = RECEIPT_NAME
+            addPerson(PERSON1)
+            addPerson(PERSON2)
+            addItem(ITEM1)
+            addItem(ITEM2)
+            addConsumption(CONSUMPTION1)
+            addConsumption(CONSUMPTION2)
+        }.execute()
+        verify {
+            ReceiptRepository.saveReceipt(
+                Receipt(
+                    name = RECEIPT_NAME,
+                    totalSum = TOTAL_SUM,
+                    persons = listOf(PERSON1, PERSON2),
+                    items = listOf(ITEM1, ITEM2),
+                    consumptions = listOf(CONSUMPTION1, CONSUMPTION2)
+                ),
+                LOCAL_TOKEN
+            )
+        }
+    }
+}
