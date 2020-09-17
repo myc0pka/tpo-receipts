@@ -1,17 +1,15 @@
 package lab1.menu
 
 import io.mockk.every
-import io.mockk.mockkObject
 import io.mockk.verify
 import lab1.service.ConsoleIOService
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
-class OptionsMenuPageTest {
+class OptionsMenuPageTest : BaseMenuPageTest() {
 
     private class TestOptionsMenuPage : OptionsMenuPage<TestOptionsMenuPage.Option>(
         title = "Title",
@@ -33,11 +31,6 @@ class OptionsMenuPageTest {
     }
 
     private val optionsMenuPage = TestOptionsMenuPage()
-
-    @BeforeEach
-    fun setUp() {
-        mockkObject(ConsoleIOService)
-    }
 
     @Test
     @DisplayName("On show should print title, options and request option number input")
