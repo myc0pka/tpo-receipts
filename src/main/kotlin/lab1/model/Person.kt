@@ -1,3 +1,3 @@
 package lab1.model
 
-class Person(val name: String)
+data class Person(val name: String, val id: Int = 0)

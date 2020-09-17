@@ -77,8 +77,12 @@ class ReceiptItemsPage(private val createReceiptCommand: CreateReceiptCommand) :
             Action.ShowPage(this)
         } else {
             printToUser("Создание чека...", endLine = false)
-            if (createReceiptCommand.execute() == CreateReceiptCommand.Result.Ok) {
+            try {
+                createReceiptCommand.execute()
                 printToUser("Готово")
+            } catch (e: Exception) {
+                printToUser("Ошибка. Повторите попытку")
+                e.printStackTrace()
             }
             Action.ShowPage(MainMenuPage())
         }
