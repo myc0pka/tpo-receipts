@@ -81,4 +81,11 @@ object ReceiptRepository {
         val queryResult = Receipts.slice(Receipts.totalSum).select { Receipts.id eq receiptId.receiptEntityId }.single()
         return queryResult[Receipts.totalSum]
     }
+
+    fun getReceiptItems(receiptId: Int): List<ReceiptItem> {
+        val queryResult = ReceiptItems.select { ReceiptItems.receipt eq receiptId.receiptEntityId }
+        return queryResult.map {
+            ReceiptItem(it[ReceiptItems.name], it[ReceiptItems.amount], it[ReceiptItems.price])
+        }
+    }
 }
