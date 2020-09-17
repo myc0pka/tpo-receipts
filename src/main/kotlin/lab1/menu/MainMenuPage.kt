@@ -4,7 +4,7 @@ import lab1.service.ReceiptRepository
 import lab1.service.TokenService
 
 class MainMenuPage : OptionsMenuPage<MainMenuPage.Option>(
-    title = "-- Главное меню -- ",
+    title = "-- Главное меню --",
     options = Option.values().toList()
 ) {
 
