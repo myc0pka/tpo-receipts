@@ -50,43 +50,58 @@ object ReceiptRepository {
     }
 
     fun getReceiptNamesByToken(ownerToken: String): List<ReceiptName> {
-        val queryResult = Receipts.slice(Receipts.id, Receipts.name).select { Receipts.ownerToken eq ownerToken }
-        return queryResult.map { ReceiptName(it[Receipts.name], it[Receipts.id].value) }
+        return transaction {
+            Receipts
+                .slice(Receipts.id, Receipts.name)
+                .select { Receipts.ownerToken eq ownerToken }
+                .map { ReceiptName(it[Receipts.name], it[Receipts.id].value) }
+        }
     }
 
     fun getReceiptItemsByReceiptId(receiptId: Int): List<ReceiptItem> {
-        val queryResult = ReceiptItems.select { ReceiptItems.receipt eq EntityID(receiptId, Receipts) }
-        return queryResult.map { ReceiptItem(it[ReceiptItems.name], it[ReceiptItems.amount], it[ReceiptItems.price]) }
+        return transaction {
+            ReceiptItems
+                .select { ReceiptItems.receipt eq EntityID(receiptId, Receipts) }
+                .map { ReceiptItem(it[ReceiptItems.name], it[ReceiptItems.amount], it[ReceiptItems.price]) }
+        }
     }
 
     private val Int.receiptEntityId: EntityID<Int>
         get() = EntityID(this, Receipts)
 
     fun getPersonTotalConsumptions(receiptId: Int): List<PersonTotalConsumption> {
-        val queryResult =
+        return transaction {
             (Consumptions innerJoin Persons innerJoin ReceiptItems)
                 .slice(Persons.name, ReceiptItems.amount, ReceiptItems.price)
                 .select { Consumptions.receipt eq receiptId.receiptEntityId }
                 .groupBy { it[Persons.name] }
-        return queryResult.map { (personName, resultRowList) ->
-            PersonTotalConsumption(
-                personName,
-                totalConsumption = resultRowList.fold(0.0) { acc, resultRow ->
-                    acc + resultRow[ReceiptItems.price] * resultRow[ReceiptItems.amount]
+                .map { (personName, resultRowList) ->
+                    PersonTotalConsumption(
+                        personName,
+                        totalConsumption = resultRowList.fold(0.0) { acc, resultRow ->
+                            acc + resultRow[ReceiptItems.price] * resultRow[ReceiptItems.amount]
+                        }
+                    )
                 }
-            )
         }
     }
 
     fun getReceiptTotalSum(receiptId: Int): Double {
-        val queryResult = Receipts.slice(Receipts.totalSum).select { Receipts.id eq receiptId.receiptEntityId }.single()
-        return queryResult[Receipts.totalSum]
+        return transaction {
+            Receipts
+                .slice(Receipts.totalSum)
+                .select { Receipts.id eq receiptId.receiptEntityId }
+                .single()[Receipts.totalSum]
+        }
     }
 
     fun getReceiptItems(receiptId: Int): List<ReceiptItem> {
-        val queryResult = ReceiptItems.select { ReceiptItems.receipt eq receiptId.receiptEntityId }
-        return queryResult.map {
-            ReceiptItem(it[ReceiptItems.name], it[ReceiptItems.amount], it[ReceiptItems.price])
+        return transaction {
+            ReceiptItems
+                .select { ReceiptItems.receipt eq receiptId.receiptEntityId }
+                .map {
+                    ReceiptItem(it[ReceiptItems.name], it[ReceiptItems.amount], it[ReceiptItems.price])
+                }
         }
     }
 
