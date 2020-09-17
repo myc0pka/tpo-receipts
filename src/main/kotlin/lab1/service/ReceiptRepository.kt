@@ -41,6 +41,7 @@ object ReceiptRepository {
                 val personIdValue = personsWithId.find { it.name == consumption.person.name }!!.id
                 val itemIdValue = itemsWithId.find { it.name == consumption.item.name }!!.id
                 Consumptions.insert {
+                    it[this.receipt] = generatedReceiptId
                     it[person] = EntityID(personIdValue, Persons)
                     it[item] = EntityID(itemIdValue, ReceiptItems)
                     it[amount] = consumption.amount
