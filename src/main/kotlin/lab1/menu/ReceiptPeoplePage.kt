@@ -12,7 +12,7 @@ class ReceiptPeoplePage(private val createReceiptCommand: CreateReceiptCommand) 
     enum class Option(override val text: String) : MenuOption {
 
         ADD_PERSON(text = "Добавить человека"),
-        END(text = "Перейти к следующему шагу"),
+        END(text = "Перейти к добавлению товаров"),
         CANCEL(text = "Вернуться в главное меню")
     }
 
