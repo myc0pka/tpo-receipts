@@ -70,6 +70,6 @@ class ReceiptConsumptionPage(
     }
 
     private fun cancel(): Action {
-        return Action.ShowPage(MainMenuPage())
+        return Action.ShowPage(MainMenuConfirmationMenuPage(callingPage = this))
     }
 }
