@@ -80,4 +80,18 @@ class CreateReceiptCommandTest {
         command.addPerson(Person("Name"))
         Assertions.assertTrue(command.hasPersonWithName("Name"))
     }
+
+    @Test
+    @DisplayName("When there are no items with given name hasItemWithName() should return false")
+    fun hasItemWithName_NoItemsWithSuchName() {
+        command.addItem(ReceiptItem("Name 1", 0, 0.0))
+        Assertions.assertFalse(command.hasItemWithName("Name 2"))
+    }
+
+    @Test
+    @DisplayName("When there is an item that has given name hasItemWithName() should return true")
+    fun hasItemWithName_OneItemHasSuchName() {
+        command.addItem(ReceiptItem("Name", 0, 0.0))
+        Assertions.assertTrue(command.hasItemWithName("Name"))
+    }
 }

@@ -31,6 +31,10 @@ class CreateReceiptCommand(private val ownerToken: String) {
         items = items + item
     }
 
+    fun hasItemWithName(name: String): Boolean {
+        return items.find { it.name == name } != null
+    }
+
     fun addConsumption(consumption: Consumption) {
         consumptions = consumptions + consumption
     }
