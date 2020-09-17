@@ -63,13 +63,6 @@ class ReceiptPage(private val receiptEntity: ReceiptEntity) :
     }
 
     private fun delete(): Action {
-        printToUser("Удаление...", endLine = false)
-        try {
-            transaction { receiptEntity.delete() }
-            printToUser("Готово")
-        } catch (e: Exception) {
-            printToUser("Ошибка. Повторите попытку")
-        }
-        return Action.ShowPage(MainMenuPage())
+        return Action.ShowPage(DeletionConfirmationMenuPage(receiptEntity, callingPage = this))
     }
 }
