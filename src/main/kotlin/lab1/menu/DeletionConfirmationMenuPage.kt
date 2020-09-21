@@ -1,10 +1,10 @@
 package lab1.menu
 
-import lab1.model.ReceiptName
+import lab1.model.NamedReceipt
 import lab1.service.ReceiptRepository
 
 class DeletionConfirmationMenuPage(
-    private val namedReceipt: ReceiptName,
+    private val namedReceipt: NamedReceipt,
     private val callingPage: ReceiptPage
 ) : ConfirmationMenuPage(title = "Вы действительно хотите удалить чек '${namedReceipt.name}'?") {
 

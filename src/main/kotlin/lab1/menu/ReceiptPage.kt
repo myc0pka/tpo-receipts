@@ -1,9 +1,9 @@
 package lab1.menu
 
-import lab1.model.ReceiptName
+import lab1.model.NamedReceipt
 import lab1.service.ReceiptRepository
 
-class ReceiptPage(private val namedReceipt: ReceiptName) :
+class ReceiptPage(private val namedReceipt: NamedReceipt) :
     OptionsMenuPage<ReceiptPage.Option>(
         options = Option.values().toList(),
         title = "-- Чек '${namedReceipt.name}' --"

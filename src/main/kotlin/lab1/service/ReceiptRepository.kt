@@ -49,12 +49,12 @@ object ReceiptRepository {
         }
     }
 
-    fun getReceiptNamesByToken(ownerToken: String): List<ReceiptName> {
+    fun getReceiptNamesByToken(ownerToken: String): List<NamedReceipt> {
         return transaction {
             Receipts
                 .slice(Receipts.id, Receipts.name)
                 .select { Receipts.ownerToken eq ownerToken }
-                .map { ReceiptName(it[Receipts.name], it[Receipts.id].value) }
+                .map { NamedReceipt(it[Receipts.name], it[Receipts.id].value) }
         }
     }
 

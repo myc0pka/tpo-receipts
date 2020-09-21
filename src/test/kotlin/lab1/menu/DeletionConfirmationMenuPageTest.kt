@@ -3,7 +3,7 @@ package lab1.menu
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import lab1.model.ReceiptName
+import lab1.model.NamedReceipt
 import lab1.service.ConsoleIOService
 import lab1.service.ReceiptRepository
 import org.junit.jupiter.api.*
@@ -13,7 +13,7 @@ class DeletionConfirmationMenuPageTest : BaseMenuPageTest() {
     private val callingPageMock = mockk<ReceiptPage>(relaxed = true)
     private val targetReceiptId = 1
     private val deletionConfirmationMenuPage =
-        DeletionConfirmationMenuPage(ReceiptName("", targetReceiptId), callingPageMock)
+        DeletionConfirmationMenuPage(NamedReceipt("", targetReceiptId), callingPageMock)
 
     @Nested
     @DisplayName("When `Yes` option selected")
