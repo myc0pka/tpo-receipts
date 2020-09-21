@@ -3,9 +3,9 @@ package lab1.menu
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import io.mockk.verifyAll
 import lab1.service.ConsoleIOService
 import lab1.service.ReceiptRepository
+import lab1.service.TokenService
 import org.junit.jupiter.api.*
 
 class MainMenuPageTest : BaseMenuPageTest() {
@@ -20,7 +20,8 @@ class MainMenuPageTest : BaseMenuPageTest() {
         verify { ConsoleIOService.print("-- Главное меню --", endLine = true) }
         verify { ConsoleIOService.print("1) Новый чек", endLine = true) }
         verify { ConsoleIOService.print("2) Мои чеки", endLine = true) }
-        verify { ConsoleIOService.print("3) Выйти", endLine = true) }
+        verify { ConsoleIOService.print("3) Показать среднюю сумму", endLine = true) }
+        verify { ConsoleIOService.print("4) Выйти", endLine = true) }
     }
 
     @Test
@@ -67,9 +68,25 @@ class MainMenuPageTest : BaseMenuPageTest() {
     }
 
     @Test
+    @DisplayName("When average sum option selected show() should print average sum and return ShowPage(this)")
+    fun averageSumSelected() {
+        val ownerToken = "da43rf"
+        val averageSum = 123.45
+        every { ConsoleIOService.getInput() } returns "3"
+        every { TokenService.getLocalToken() } returns ownerToken
+        every { ReceiptRepository.getAverageSumByToken(ownerToken) } returns averageSum
+
+        Assertions.assertEquals(
+            mainMenuPage,
+            (mainMenuPage.show() as Action.ShowPage).page
+        )
+        verify { ConsoleIOService.print("Средняя сумма вашего чека: $averageSum", endLine = true) }
+    }
+
+    @Test
     @DisplayName("When exit option selected show() should return ShowPage(ExitConfirmationMenuPage)")
     fun exitSelected() {
-        every { ConsoleIOService.getInput() } returns "3"
+        every { ConsoleIOService.getInput() } returns "4"
         Assertions.assertEquals(
             ExitConfirmationMenuPage::class,
             (mainMenuPage.show() as Action.ShowPage).page::class
