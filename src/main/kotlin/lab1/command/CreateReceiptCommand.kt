@@ -1,9 +1,6 @@
 package lab1.command
 
-import lab1.model.Consumption
-import lab1.model.Person
-import lab1.model.Receipt
-import lab1.model.ReceiptItem
+import lab1.model.*
 import lab1.service.ReceiptRepository
 
 class CreateReceiptCommand(private val ownerToken: String) {
@@ -18,6 +15,15 @@ class CreateReceiptCommand(private val ownerToken: String) {
         get() = persons.size
     val itemCount: Int
         get() = items.size
+
+    private val ReceiptItem.summary: String
+        get() = "'$name' x$amount * $price"
+    val preview: ReceiptPreview
+        get() = ReceiptPreview(
+            personNames = persons.map { it.name },
+            itemSummaries = items.map { it.summary },
+            totalSum = computeTotalSumOf(items)
+        )
 
     fun addPerson(person: Person) {
         persons = persons + person
@@ -39,11 +45,15 @@ class CreateReceiptCommand(private val ownerToken: String) {
         consumptions = consumptions + consumption
     }
 
+    private fun computeTotalSumOf(items: List<ReceiptItem>): Double {
+        return items.fold(0.0) { acc, item -> acc + item.amount * item.price }
+    }
+
     fun execute() {
         ReceiptRepository.saveReceipt(
             Receipt(
                 name = name!!,
-                totalSum = items.fold(0.0) { acc, item -> acc + item.amount * item.price },
+                totalSum = computeTotalSumOf(items),
                 persons, items, consumptions
             ),
             ownerToken

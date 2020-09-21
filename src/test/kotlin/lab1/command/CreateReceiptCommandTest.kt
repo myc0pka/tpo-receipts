@@ -3,10 +3,7 @@ package lab1.command
 import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.verify
-import lab1.model.Consumption
-import lab1.model.Person
-import lab1.model.Receipt
-import lab1.model.ReceiptItem
+import lab1.model.*
 import lab1.service.ReceiptRepository
 import lab1.service.TokenService
 import org.junit.jupiter.api.Assertions
@@ -21,12 +18,21 @@ class CreateReceiptCommandTest {
 
         private const val RECEIPT_NAME = "Name"
 
-        private val PERSON1 = Person("Person1")
-        private val PERSON2 = Person("Person2")
+        private const val PERSON1_NAME = "Person1"
+        private val PERSON1 = Person(PERSON1_NAME)
+        private const val PERSON2_NAME = "Person2"
+        private val PERSON2 = Person(PERSON2_NAME)
 
-        private val ITEM1 = ReceiptItem("Item1", 2, 100.0)
-        private val ITEM2 = ReceiptItem("Item2", 3, 200.0)
-        private const val TOTAL_SUM = 2 * 100.0 + 3 * 200.0
+        private const val ITEM1_NAME = "Item1"
+        private const val ITEM1_AMOUNT = 2
+        private const val ITEM1_PRICE = 100.0
+        private val ITEM1 = ReceiptItem(ITEM1_NAME, ITEM1_AMOUNT, ITEM1_PRICE)
+        private const val ITEM2_NAME = "Item2"
+        private const val ITEM2_AMOUNT = 3
+        private const val ITEM2_PRICE = 200.0
+        private val ITEM2 = ReceiptItem(ITEM2_NAME, ITEM2_AMOUNT, ITEM2_PRICE)
+
+        private const val TOTAL_SUM = ITEM1_AMOUNT * ITEM1_PRICE + ITEM2_AMOUNT * ITEM2_PRICE
 
         private val CONSUMPTION1 = Consumption(ITEM1, PERSON1, 1)
         private val CONSUMPTION2 = Consumption(ITEM2, PERSON2, 2)
@@ -93,5 +99,28 @@ class CreateReceiptCommandTest {
     fun hasItemWithName_OneItemHasSuchName() {
         command.addItem(ReceiptItem("Name", 0, 0.0))
         Assertions.assertTrue(command.hasItemWithName("Name"))
+    }
+
+    @Test
+    @DisplayName("preview() should create and return ReceiptPreview instance")
+    fun preview() {
+        command.apply {
+            addPerson(PERSON1)
+            addPerson(PERSON2)
+            addItem(ITEM1)
+            addItem(ITEM2)
+        }
+
+        Assertions.assertEquals(
+            ReceiptPreview(
+                personNames = listOf(PERSON1_NAME, PERSON2_NAME),
+                itemSummaries = listOf(
+                    "'$ITEM1_NAME' x$ITEM1_AMOUNT * $ITEM1_PRICE",
+                    "'$ITEM2_NAME' x$ITEM2_AMOUNT * $ITEM2_PRICE"
+                ),
+                totalSum = TOTAL_SUM
+            ),
+            command.preview
+        )
     }
 }
