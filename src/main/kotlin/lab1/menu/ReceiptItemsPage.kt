@@ -1,11 +1,17 @@
 package lab1.menu
 
-import lab1.RegularExpressions
 import lab1.command.CreateReceiptCommand
 import lab1.model.ReceiptItem
 import kotlin.math.min
 
 const val RECEIPT_ITEM_NAME_MAX_LENGTH = 20
+
+private const val MIN_AMOUNT = 1
+private const val MAX_AMOUNT = 100
+private const val INVALID_AMOUNT_ERROR_MESSAGE = "Количество должно быть целым положительным числом от 1 до 100"
+
+private const val MAX_PRICE = 1_000_000_000.0
+private const val INVALID_PRICE_ERROR_MESSAGE = "Цена должна быть целым вещественным числом больше 0 до 1 000 000 000"
 
 class ReceiptItemsPage(private val createReceiptCommand: CreateReceiptCommand) :
     OptionsMenuPage<ReceiptItemsPage.Option>(options = Option.values().toList()) {
@@ -26,39 +32,58 @@ class ReceiptItemsPage(private val createReceiptCommand: CreateReceiptCommand) :
     }
 
     private fun addItem(): Action {
-        val nameInput = requestNotEmptyInput(
-            message = "Введите название товара: ",
-            emptyInputMessage = "Название не должно быть пустым"
-        )
-        val amount: Int
+        val name: String
+        while (true) {
+            val nameInput = requestNotEmptyInput(
+                message = "Введите название товара: ",
+                emptyInputMessage = "Название не должно быть пустым"
+            )
+            if (!createReceiptCommand.hasItemWithName(nameInput)) {
+                name = nameInput
+                break
+            } else {
+                printToUser("Ошибка: товар с именем '$nameInput' был добавлен ранее")
+            }
+        }
+        var amount: Int
         while (true) {
             val amountInput = requestNotEmptyInput(
                 message = "Введите количество: ",
                 emptyInputMessage = "Количество не должно быть пустым"
             )
-            if (amountInput.matches(RegularExpressions.POSITIVE_INT)) {
-                amount = amountInput.toInt()
-                break
-            } else {
-                printToUser("Количество должно быть целым положительным числом")
+            try {
+                val uncheckedAmount = amountInput.toInt()
+                if (uncheckedAmount in MIN_AMOUNT..MAX_AMOUNT) {
+                    amount = uncheckedAmount
+                    break
+                } else {
+                    printToUser(INVALID_AMOUNT_ERROR_MESSAGE)
+                }
+            } catch (e: NumberFormatException) {
+                printToUser(INVALID_AMOUNT_ERROR_MESSAGE)
             }
         }
-        val price: Double
+        var price: Double
         while (true) {
             val priceInput = requestNotEmptyInput(
                 message = "Введите цену: ",
                 emptyInputMessage = "Цена не должна быть пустой"
             )
-            if (priceInput.matches(RegularExpressions.POSITIVE_REAL)) {
-                price = priceInput.toDouble()
-                break
-            } else {
-                printToUser("Цена должна быть целым вещественным числом")
+            try {
+                val uncheckedPrice = priceInput.toDouble()
+                if (uncheckedPrice > 0 && uncheckedPrice <= MAX_PRICE) {
+                    price = uncheckedPrice
+                    break
+                } else {
+                    printToUser(INVALID_PRICE_ERROR_MESSAGE)
+                }
+            } catch (e: NumberFormatException) {
+                printToUser(INVALID_PRICE_ERROR_MESSAGE)
             }
         }
 
         val item = ReceiptItem(
-            name = nameInput.substring(0, min(nameInput.length, RECEIPT_ITEM_NAME_MAX_LENGTH)),
+            name = name.substring(0, min(name.length, RECEIPT_ITEM_NAME_MAX_LENGTH)),
             amount, price
         )
         createReceiptCommand.addItem(item)
