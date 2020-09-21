@@ -6,6 +6,7 @@ import lab1.db.ReceiptItems
 import lab1.db.Receipts
 import lab1.model.*
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.avg
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
@@ -108,6 +109,16 @@ object ReceiptRepository {
     fun deleteReceipt(receiptId: Int) {
         transaction {
             Receipts.deleteWhere { Receipts.id eq receiptId.receiptEntityId }
+        }
+    }
+
+    fun getAverageSumByToken(token: String): Double {
+        return transaction {
+            Receipts
+                .slice(Receipts.totalSum.avg())
+                .select { Receipts.ownerToken eq token }
+                .groupBy(Receipts.ownerToken)
+                .single()[Receipts.totalSum.avg()]?.toDouble() ?: 0.0
         }
     }
 }
