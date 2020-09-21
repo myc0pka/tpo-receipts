@@ -19,6 +19,7 @@ class ReceiptItemsPage(private val createReceiptCommand: CreateReceiptCommand) :
     enum class Option(override val text: String) : MenuOption {
 
         ADD_ITEM(text = "Добавить товар"),
+        BACK_TO_PEOPLE(text = "Вернуться к добавлению людей"),
         END(text = "Завершить создание чека"),
         CANCEL(text = "Вернуться в главное меню")
     }
@@ -27,6 +28,7 @@ class ReceiptItemsPage(private val createReceiptCommand: CreateReceiptCommand) :
         return when (option) {
             Option.ADD_ITEM -> addItem()
             Option.END -> end()
+            Option.BACK_TO_PEOPLE -> backToPeople()
             Option.CANCEL -> cancel()
         }
     }
@@ -94,6 +96,10 @@ class ReceiptItemsPage(private val createReceiptCommand: CreateReceiptCommand) :
                 availableAmount = item.amount
             )
         )
+    }
+
+    private fun backToPeople(): Action {
+        return Action.ShowPage(ReceiptPeoplePage(createReceiptCommand))
     }
 
     private fun end(): Action {

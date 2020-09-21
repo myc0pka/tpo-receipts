@@ -23,8 +23,9 @@ class ReceiptItemsPageTest : BaseMenuPageTest() {
 
         receiptItemsPage.show()
         verify { ConsoleIOService.print("1) Добавить товар", endLine = true) }
-        verify { ConsoleIOService.print("2) Завершить создание чека", endLine = true) }
-        verify { ConsoleIOService.print("3) Вернуться в главное меню", endLine = true) }
+        verify { ConsoleIOService.print("2) Вернуться к добавлению людей", endLine = true) }
+        verify { ConsoleIOService.print("3) Завершить создание чека", endLine = true) }
+        verify { ConsoleIOService.print("4) Вернуться в главное меню", endLine = true) }
     }
 
     @Nested
@@ -201,13 +202,24 @@ class ReceiptItemsPageTest : BaseMenuPageTest() {
         }
     }
 
+    @Test
+    @DisplayName("When back to people option selected show() should return ShowPage(ReceiptPeoplePage)")
+    fun backToPeopleSelected() {
+        every { ConsoleIOService.getInput() } returns "2"
+
+        Assertions.assertEquals(
+            ReceiptPeoplePage::class,
+            (receiptItemsPage.show() as Action.ShowPage).page::class
+        )
+    }
+
     @Nested
     @DisplayName("When end option selected")
     inner class EndSelected {
 
         @BeforeEach
         fun setUp() {
-            every { ConsoleIOService.getInput() } returns "2"
+            every { ConsoleIOService.getInput() } returns "3"
         }
 
         @Test
@@ -266,7 +278,7 @@ class ReceiptItemsPageTest : BaseMenuPageTest() {
     @Test
     @DisplayName("When go to main menu option selected show() should return ShowPage(MainMenuConfirmationPage)")
     fun goToMainMenuSelected() {
-        every { ConsoleIOService.getInput() } returns "3"
+        every { ConsoleIOService.getInput() } returns "4"
 
         Assertions.assertEquals(
             MainMenuConfirmationMenuPage::class,
