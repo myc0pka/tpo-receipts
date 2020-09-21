@@ -1,6 +1,5 @@
 package lab1.menu
 
-import lab1.RegularExpressions
 import lab1.command.CreateReceiptCommand
 import lab1.model.Consumption
 import lab1.model.Person
@@ -12,36 +11,38 @@ class ReceiptConsumptionPage(
     private val availableAmount: Int
 ) : OptionsMenuPage<ReceiptConsumptionPage.Option>(
     title = "Кто покупал '${consumedItem.name}'? (осталось $availableAmount)",
-    options = createReceiptCommand.persons.map { Option.AddConsumption(it) } + Option.End
+    options = createReceiptCommand.persons.map { Option.AddConsumption(it) } + Option.RestIsMine + Option.Cancel
 ) {
 
     sealed class Option(override val text: String) : MenuOption {
 
-        object End : Option(text = "Готово")
-        class AddConsumption(val person: Person) : Option(text = person.name)
+        class AddConsumption(val consumer: Person) : Option(text = consumer.name)
+        object RestIsMine : Option(text = "Остальное брал я")
         object Cancel : Option(text = "Вернуться в главное меню")
     }
 
     override fun handleOptionInput(option: Option): Action {
         return when (option) {
-            is Option.AddConsumption -> addConsumption(option)
-            Option.End -> end()
+            is Option.AddConsumption -> addConsumption(option.consumer)
+            Option.RestIsMine -> end()
             Option.Cancel -> cancel()
         }
     }
 
-    private fun addConsumption(option: Option.AddConsumption): Action {
+    private fun printErrorMessage() = printToUser("Введите число от 0 до $availableAmount")
+
+    private fun addConsumption(consumer: Person): Action {
         while (true) {
             val consumedAmountInput = requestNotEmptyInput(
                 message = "Введите количество: ",
                 emptyInputMessage = "Количество не должно быть пустым"
             )
-            if (consumedAmountInput.matches(RegularExpressions.POSITIVE_INT)) {
+            try {
                 val consumedAmount = consumedAmountInput.toInt()
-                if (consumedAmount <= availableAmount) {
+                if (consumedAmount in 1..availableAmount) {
                     val consumption = Consumption(
                         item = consumedItem,
-                        person = option.person,
+                        person = consumer,
                         amount = consumedAmount
                     )
                     createReceiptCommand.addConsumption(consumption)
@@ -57,10 +58,10 @@ class ReceiptConsumptionPage(
                         )
                     }
                 } else {
-                    printToUser("Количество должно быть не больше остатка ($availableAmount)")
+                    printErrorMessage()
                 }
-            } else {
-                printToUser("Количество должно быть целым положительным числом")
+            } catch (e: NumberFormatException) {
+                printErrorMessage()
             }
         }
     }
