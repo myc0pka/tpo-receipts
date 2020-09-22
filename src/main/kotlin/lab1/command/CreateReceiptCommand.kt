@@ -20,6 +20,7 @@ class CreateReceiptCommand(private val ownerToken: String) {
         get() = "'$name' x$amount * $price"
     val preview: ReceiptPreview
         get() = ReceiptPreview(
+            name!!,
             personNames = persons.map { it.name },
             itemSummaries = items.map { it.summary },
             totalSum = computeTotalSumOf(items)

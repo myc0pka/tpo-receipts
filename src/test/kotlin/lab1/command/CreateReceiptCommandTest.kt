@@ -105,6 +105,7 @@ class CreateReceiptCommandTest {
     @DisplayName("preview() should create and return ReceiptPreview instance")
     fun preview() {
         command.apply {
+            name = RECEIPT_NAME
             addPerson(PERSON1)
             addPerson(PERSON2)
             addItem(ITEM1)
@@ -113,6 +114,7 @@ class CreateReceiptCommandTest {
 
         Assertions.assertEquals(
             ReceiptPreview(
+                name = RECEIPT_NAME,
                 personNames = listOf(PERSON1_NAME, PERSON2_NAME),
                 itemSummaries = listOf(
                     "'$ITEM1_NAME' x$ITEM1_AMOUNT * $ITEM1_PRICE",
