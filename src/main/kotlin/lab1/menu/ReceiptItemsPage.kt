@@ -103,19 +103,11 @@ class ReceiptItemsPage(private val createReceiptCommand: CreateReceiptCommand) :
     }
 
     private fun end(): Action {
-        return if (createReceiptCommand.itemCount == 0) {
-            printToUser("Добавьте по крайней мере один товар")
-            Action.ShowPage(this)
+        return if (createReceiptCommand.itemCount > 0) {
+            Action.ShowPage(ReceiptPreviewPage(createReceiptCommand))
         } else {
-            printToUser("Создание чека...", endLine = false)
-            try {
-                createReceiptCommand.execute()
-                printToUser("Готово")
-            } catch (e: Exception) {
-                printToUser("Ошибка. Повторите попытку")
-                e.printStackTrace()
-            }
-            Action.ShowPage(MainMenuPage())
+            printToUser("Добавьте по крайней мере один товар")
+            return Action.ShowPage(this)
         }
     }
 

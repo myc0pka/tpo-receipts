@@ -231,47 +231,15 @@ class ReceiptItemsPageTest : BaseMenuPageTest() {
             verify { ConsoleIOService.print("Добавьте по крайней мере один товар", endLine = true) }
         }
 
-        @Nested
-        @DisplayName("When one item has been added")
-        inner class OneItemAdded {
+        @Test
+        @DisplayName("When one item has been added show() should return ShowPage(ReceiptPreviewPage)")
+        fun oneItemAdded() {
+            every { createCommandMock getProperty "itemCount" } returns 1
 
-            @BeforeEach
-            fun setUp() {
-                every { createCommandMock getProperty "itemCount" } returns 1
-            }
-
-            @Test
-            @DisplayName("show() should print info message and call CreateReceiptCommand#execute()")
-            fun anyway() {
-                receiptItemsPage.show()
-
-                verify { ConsoleIOService.print("Создание чека...", endLine = false) }
-                verify { createCommandMock.execute() }
-            }
-
-            @Test
-            @DisplayName("When create receipt operation fails show() should print error message and return ShowPage(MainMenuPage)")
-            fun createReceiptOperationFails() {
-                every { createCommandMock.execute() } throws Exception()
-
-                Assertions.assertEquals(
-                    MainMenuPage::class,
-                    (receiptItemsPage.show() as Action.ShowPage).page::class
-                )
-                verify { ConsoleIOService.print("Ошибка. Повторите попытку", endLine = true) }
-            }
-
-            @Test
-            @DisplayName("When create receipt operation succeeds show() should print success message and return ShowPage(MainMenuPage)")
-            fun createReceiptOperationSucceeds() {
-                every { createCommandMock.execute() } returns Unit
-
-                Assertions.assertEquals(
-                    MainMenuPage::class,
-                    (receiptItemsPage.show() as Action.ShowPage).page::class
-                )
-                verify { ConsoleIOService.print("Готово", endLine = true) }
-            }
+            Assertions.assertEquals(
+                ReceiptPreviewPage::class,
+                (receiptItemsPage.show() as Action.ShowPage).page::class
+            )
         }
     }
 
