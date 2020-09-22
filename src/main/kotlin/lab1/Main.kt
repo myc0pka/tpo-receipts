@@ -16,7 +16,6 @@ fun main(args: Array<String>) {
     val dbPassword = args[1]
     Database.connect(
         url = "jdbc:postgresql://balarama.db.elephantsql.com:5432/$dbUser",
-        driver = "org.postgresql.Driver",
         user = dbUser,
         password = dbPassword
     )
