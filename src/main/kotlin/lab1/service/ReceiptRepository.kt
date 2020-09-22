@@ -59,14 +59,6 @@ object ReceiptRepository {
         }
     }
 
-    fun getReceiptItemsByReceiptId(receiptId: Int): List<ReceiptItem> {
-        return transaction {
-            ReceiptItems
-                .select { ReceiptItems.receipt eq EntityID(receiptId, Receipts) }
-                .map { ReceiptItem(it[ReceiptItems.name], it[ReceiptItems.amount], it[ReceiptItems.price]) }
-        }
-    }
-
     private val Int.receiptEntityId: EntityID<Int>
         get() = EntityID(this, Receipts)
 
