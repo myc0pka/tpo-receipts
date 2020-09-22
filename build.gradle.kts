@@ -19,6 +19,8 @@ dependencies {
 
     implementation("org.postgresql:postgresql:42.2.5")
 
+    runtimeOnly("org.slf4j:slf4j-simple:1.6.1")
+
     val junitVersion = "5.7.0"
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
