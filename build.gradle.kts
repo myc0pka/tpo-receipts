@@ -17,7 +17,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
 
-    implementation("org.postgresql:postgresql:42.2.5")
+    runtimeOnly("org.postgresql:postgresql:42.2.5")
 
     runtimeOnly("org.slf4j:slf4j-simple:1.6.1")
 
