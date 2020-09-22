@@ -6,8 +6,6 @@ import lab1.service.ConsoleIOService
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.ValueSource
 
 class OptionsMenuPageTest : BaseMenuPageTest() {
 
@@ -59,12 +57,11 @@ class OptionsMenuPageTest : BaseMenuPageTest() {
         verify { ConsoleIOService.print("Некорректный номер : 3", endLine = true) }
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = ["1", "2"])
+    @Test
     @DisplayName("When user inputs valid integer show() should perform corresponding actions")
-    fun onInput_ValidInteger(validInteger: String) {
-        every { ConsoleIOService.getInput() } returns validInteger
-        Assertions.assertEquals(validInteger, (optionsMenuPage.show() as Action.Stub).message)
+    fun onInput_ValidInteger() {
+        every { ConsoleIOService.getInput() } returns "1"
+        Assertions.assertEquals("1", (optionsMenuPage.show() as Action.Stub).message)
     }
 
     @Test
