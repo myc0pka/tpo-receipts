@@ -66,4 +66,12 @@ class OptionsMenuPageTest : BaseMenuPageTest() {
         every { ConsoleIOService.getInput() } returns validInteger
         Assertions.assertEquals(validInteger, (optionsMenuPage.show() as Action.Stub).message)
     }
+
+    @Test
+    @DisplayName("When user inputs too big integer show() should print error message and request input again")
+    fun onInput_TooBigIntegerValue() {
+        every { ConsoleIOService.getInput() } returns "1000000000000000000000" andThen "1"
+        optionsMenuPage.show()
+        verify { ConsoleIOService.print("Некорректный ввод : '1000000000000000000000'", endLine = true) }
+    }
 }

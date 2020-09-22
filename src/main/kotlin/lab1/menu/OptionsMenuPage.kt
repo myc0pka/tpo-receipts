@@ -10,11 +10,6 @@ abstract class OptionsMenuPage<Option : MenuOption>(
     private val options: List<Option>
 ) : MenuPage() {
 
-    companion object {
-
-        private val POSITIVE_INT_REGEX = Regex("[1-9]\\d*")
-    }
-
     override fun show(): Action {
         if (title != null) {
             printToUser(title)
@@ -25,7 +20,7 @@ abstract class OptionsMenuPage<Option : MenuOption>(
         while (true) {
             printToUser("Выберите опцию (1-${options.size}): ", endLine = false)
             val userInput = getUserInput()
-            if (userInput.matches(POSITIVE_INT_REGEX)) {
+            try {
                 val optionNumber = userInput.toInt()
                 val optionIndex = optionNumber - 1
                 if (optionIndex in options.indices) {
@@ -33,7 +28,7 @@ abstract class OptionsMenuPage<Option : MenuOption>(
                 } else {
                     printToUser("Некорректный номер : $optionNumber")
                 }
-            } else {
+            } catch (e: NumberFormatException) {
                 printToUser("Некорректный ввод : '$userInput'")
             }
         }
