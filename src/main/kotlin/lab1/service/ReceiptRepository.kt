@@ -110,7 +110,7 @@ object ReceiptRepository {
                 .slice(Receipts.totalSum.avg())
                 .select { Receipts.ownerToken eq token }
                 .groupBy(Receipts.ownerToken)
-                .single()[Receipts.totalSum.avg()]?.toDouble() ?: 0.0
+                .singleOrNull()?.get(Receipts.totalSum.avg())?.toDouble() ?: 0.0
         }
     }
 }
