@@ -65,14 +65,14 @@ object ReceiptRepository {
     fun getPersonTotalConsumptions(receiptId: Int): List<PersonTotalConsumption> {
         return transaction {
             (Consumptions innerJoin Persons innerJoin ReceiptItems)
-                .slice(Persons.name, ReceiptItems.amount, ReceiptItems.price)
+                .slice(Persons.name, Consumptions.amount, ReceiptItems.price)
                 .select { Consumptions.receipt eq receiptId.receiptEntityId }
                 .groupBy { it[Persons.name] }
                 .map { (personName, resultRowList) ->
                     PersonTotalConsumption(
                         personName,
                         totalConsumption = resultRowList.fold(0.0) { acc, resultRow ->
-                            acc + resultRow[ReceiptItems.price] * resultRow[ReceiptItems.amount]
+                            acc + resultRow[Consumptions.amount] * resultRow[ReceiptItems.price]
                         }
                     )
                 }
