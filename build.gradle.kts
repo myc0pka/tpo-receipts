@@ -26,6 +26,8 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
 
     testImplementation("io.mockk:mockk:1.10.0")
+
+    testRuntimeOnly("com.h2database:h2:1.4.200")
 }
 
 tasks {
