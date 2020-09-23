@@ -31,7 +31,7 @@ object ReceiptItems : IntIdTable() {
 object Consumptions : IntIdTable() {
 
     val receipt = reference("receipt", Receipts, onDelete = ReferenceOption.CASCADE)
-    val person = reference("person", Persons)
-    val item = reference("item", ReceiptItems)
+    val person = reference("person", Persons, onDelete = ReferenceOption.CASCADE)
+    val item = reference("item", ReceiptItems, onDelete = ReferenceOption.CASCADE)
     val amount = integer("amount")
 }
